@@ -5,10 +5,11 @@ import androidx.appcompat.app.AlertDialog
 
 object AlertDialogHelper {
 
-    fun showAlertDialogSingle(context: Context, message: String, str1: String) {
+    fun showAlertDialogSingle(context: Context, message: String, str1: String, listener: OnSingleClickListener) {
         val builder = AlertDialog.Builder(context)
         builder.setMessage(message)
         builder.setPositiveButton(str1) { dialog, _ ->
+            listener.Click()
             dialog.dismiss()
         }
         val alertDialog = builder.create()
@@ -34,5 +35,9 @@ object AlertDialogHelper {
     public interface OnButtonClickListener {
         fun onLeftButtonClicked()
         fun onRightButtonClicked()
+    }
+
+    public interface OnSingleClickListener{
+        fun Click()
     }
 }

@@ -4,6 +4,16 @@ package com.arcsoft.app.staticdata
  * 常量类
  */
 object Constant {
+
+
+
+    const val ToActivity: String = "ToActivity"
+    const val ToFaceCollectionFromRegister: String = "ToFaceCollectionFromRegister"
+
+    const val url : String = "jdbc:postgresql://192.168.17.239:26000/postgres"
+    const val userpassword: String = "xsc20240401."
+    const val username: String = "xsc"
+
     /**
      * 搜索接口查询关键字
      */
