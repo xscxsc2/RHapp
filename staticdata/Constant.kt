@@ -5,14 +5,25 @@ package com.arcsoft.app.staticdata
  */
 object Constant {
 
-
-
+    const val isCheckTeacher: Int = 1
+    const val isCheckStudent: Int = 0
+    const val client: String = "client"
+    const val clientStudent = "1"
+    const val clientTeacher = "2"
+    const val Compare = "2"
+    const val PassWordTrue: String = "true"
+    const val UserSno: String = "usersno"
+    const val UserName: String = "username"
+    const val ToCompareFace: String = "ToCompareFace"
     const val ToActivity: String = "ToActivity"
     const val ToFaceCollectionFromRegister: String = "ToFaceCollectionFromRegister"
 
-    const val url : String = "jdbc:postgresql://192.168.17.239:26000/postgres"
-    const val userpassword: String = "xsc20240401."
-    const val username: String = "xsc"
+    /**
+     * OpenGauss数据库
+     */
+    const val url: String = "jdbc:postgresql://192.168.17.239:26000/postgres"
+    const val DBuserpassword: String = "xsc20240401."
+    const val DBusername: String = "xsc"
 
     /**
      * 搜索接口查询关键字

@@ -4,6 +4,8 @@ import android.content.Intent
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.arcsoft.app.extension.shortToast
 import com.arcsoft.app.staticdata.Constant
 import com.arcsoft.arcfacedemo.R
 import com.arcsoft.arcfacedemo.databinding.ActivityRegisterBinding
@@ -23,6 +25,7 @@ class RegisterActivity : BaseTitleActivity<ActivityRegisterBinding>() {
 
     private var viewModel: RegisterViewModel = RegisterViewModel()
     private var isCollectionFace = false
+    private var CheckStudentOrTeacher = Constant.isCheckTeacher //0是选中学生，1是老师
 
     private var faceEntity: FaceEntity? = null
 
@@ -37,15 +40,21 @@ class RegisterActivity : BaseTitleActivity<ActivityRegisterBinding>() {
             ViewModelProvider(this).get(RegisterViewModel::class.java)
         initViewModel(viewModel)
 
+        viewModel.data.observe(this){
+            if (it == 1){
+                AlertDialogHelper.showAlertDialogSingle(this,"注册成功","确认",object: AlertDialogHelper.OnSingleClickListener{
+                    override fun Click() {
 
-
-
+                    }
+                })
+            }
+        }
 
     }
 
     //处理黏性事件
-    @Subscribe(threadMode = ThreadMode.ASYNC ,sticky = true)
-    fun StickyEventBus(faceEntity: FaceEntity){
+    @Subscribe(threadMode = ThreadMode.ASYNC, sticky = true)
+    fun StickyEventBus(faceEntity: FaceEntity) {
         this.faceEntity = faceEntity
         isCollectionFace = true
     }
@@ -66,15 +75,18 @@ class RegisterActivity : BaseTitleActivity<ActivityRegisterBinding>() {
 
     override fun initListeners() {
         super.initListeners()
+        //复选点击
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.radioTeacher -> {
+                    CheckStudentOrTeacher = Constant.isCheckTeacher
                     binding.studentNo.setText("请输入工号")
 //                    AlertDialogHelper.showAlertDialogSingle(this, "这是一个弹窗消息","确定")
                     binding.faceCollection.visibility = View.GONE
                 }
 
                 R.id.radioStudent -> {
+                    CheckStudentOrTeacher = Constant.isCheckStudent
                     binding.studentNo.setText("请输入学号")
                     binding.faceCollection.visibility = View.VISIBLE
                     AlertDialogHelper.showAlertDialogDouble(
@@ -96,30 +108,36 @@ class RegisterActivity : BaseTitleActivity<ActivityRegisterBinding>() {
             }
         }
 
+        //注册
         binding.register.setOnClickListener {
-//
-//            val faceEntity : FaceEntity = null!!
-//            //TODO:insertOpenGauss
-
-//            GlobalScope.launch {
-//                // 方法2：使用 GlobalScope 单例对象，调用 launch 开启协程
-//                insert()
-//
-//            }
-            if (isCollectionFace){
-                GlobalScope.launch {
-                    OpenGaussHelper.registerUser(faceEntity!!,binding.nickname.text.toString(),binding.password.text.toString(),binding.studentNo.text.toString())
-                }
-            }else{
-                AlertDialogHelper.showAlertDialogSingle(this,"请收集人脸！","确认", object : AlertDialogHelper.OnSingleClickListener{
-                    override fun Click() {
-
+            if (CheckStudentOrTeacher == Constant.isCheckStudent) {  //学生
+                if (isCollectionFace) {
+                    GlobalScope.launch {
+                        OpenGaussHelper.registerUser(
+                            faceEntity!!,
+                            binding.nickname.text.toString(),
+                            binding.password.text.toString(),
+                            binding.studentNo.text.toString()
+                        )
                     }
-                })
+                } else {
+                    AlertDialogHelper.showAlertDialogSingle(
+                        this,
+                        "请收集人脸！",
+                        "确认",
+                        object : AlertDialogHelper.OnSingleClickListener {
+                            override fun Click() {
+
+                            }
+                        })
+                }
+            } else {    //老师
+                viewModel.registerFromTeacher(binding.nickname,binding.password,binding.studentNo)
             }
+
         }
 
-
+        //收集人脸
         binding.faceCollection.setOnClickListener {
             val intent =
                 Intent(this, RegisterAndRecognizeActivity::class.java) // 创建Intent，指定目标Activity
@@ -130,13 +148,22 @@ class RegisterActivity : BaseTitleActivity<ActivityRegisterBinding>() {
             startActivity(intent)
         }
 
-        binding.home.setOnClickListener{
+        //返回首页
+        binding.home.setOnClickListener {
             startActivity(HomeActivity::class.java)
         }
 
+        binding.compare.setOnClickListener {
+            val intent =
+                Intent(this, RegisterAndRecognizeActivity::class.java)
+            intent.putExtra(Constant.ToActivity, Constant.ToCompareFace)
+            startActivity(intent)
+        }
+
+
     }
 
-    private  fun insert() {
+    private fun insert() {
 
         val username = "xsc" // 替换为你的数据库用户名
         val password = "xsc20240401." // 替换为你的数据库密码

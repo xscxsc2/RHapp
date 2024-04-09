@@ -3,6 +3,7 @@ package com.arcsoft.arcfacedemo.thisapp.welcome
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.arcsoft.app.base.activity.BaseViewModelActivity
 import com.arcsoft.app.util.PreferenceUtil
 import com.arcsoft.arcfacedemo.R
@@ -15,9 +16,17 @@ class WelcomeActivity : BaseViewModelActivity<ActivityWelcomeBinding>() {
     override fun initViews() {
         super.initViews()
 
-        binding.root.postDelayed({
-            prepareNext()
-        }, 1500)
+//        binding.root.postDelayed({
+//            prepareNext()
+//        }, 1500)
+
+        var name = PreferenceUtil.getUserName()
+        var sno = PreferenceUtil.getUserSno()
+        var faceId = PreferenceUtil.getFaceId()
+        var isLogin = PreferenceUtil.isLogin()
+
+        Log.d(TAG,"test")
+        Log.d(TAG, "name:${name}, sno:${sno}, isLogin:${isLogin}, faceId:${faceId}")
 
     }
 
@@ -30,6 +39,10 @@ class WelcomeActivity : BaseViewModelActivity<ActivityWelcomeBinding>() {
         }
         startActivity(intent)
         finish()
+    }
+
+    companion object{
+        const val TAG = "WelcomeActivity"
     }
 
 

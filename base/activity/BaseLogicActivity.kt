@@ -18,7 +18,7 @@ open class BaseLogicActivity : BaseCommonActivity() {
     override fun initViews() {
         super.initViews()
         //设置沉浸式状态栏
-        QMUIStatusBarHelper.translucent(this)
+//        QMUIStatusBarHelper.translucent(this)
         if (SuperDarkUtil.isDark(this)) {
             //状态栏文字白色
             QMUIStatusBarHelper.setStatusBarDarkMode(this)
