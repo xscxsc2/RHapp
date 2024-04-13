@@ -19,13 +19,9 @@ class HomeAppActivity : BaseViewModelActivity<ActivityMainContentBinding>() {
     private lateinit var viewModel: HomeAppViewModel
     private lateinit var client: String
 
-
     override fun initViews() {
         super.initViews()
-
-
     }
-
 
     override fun initDatum() {
         super.initDatum()
@@ -34,7 +30,6 @@ class HomeAppActivity : BaseViewModelActivity<ActivityMainContentBinding>() {
         initViewModel(viewModel)
 
         //获取端
-
         client = PreferenceUtil.getClient()
         Log.d(TAG, "initDatum:当前端 ${client}")
 

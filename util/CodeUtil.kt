@@ -9,7 +9,7 @@ object CodeUtil {
 
     fun getCurriculumCode(): String {
         val chars = ('0'..'9') + ('A'..'Z')
-        return (1..4).map {
+        return (1..6).map {
             chars.random(random)
         }.joinToString("")
     }

@@ -1,44 +1,44 @@
-package com.arcsoft.arcfacedemo.thisapp.bean
+package com.arcsoft.arcfacedemo.thisapp.teacher.curriculum
 
 import android.os.Parcel
 import android.os.Parcelable
 
-data class Curriculum(
+
+data class CurriculumZ(
 
     val code: String?,
     val ownerName: String?,
-    val curriculumName: String?
+    val curriculumName: String?,
+    val ischeck: Int
 
-): Parcelable {
+):Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
-        parcel.readString()
+        parcel.readString(),
+        parcel.readInt()
     ) {
-    }
-
-    constructor(curriculumName: String) : this("", "", curriculumName) {
-        // 这里可以放置一些初始化代码，如果有必要的话
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(code)
         parcel.writeString(ownerName)
         parcel.writeString(curriculumName)
+        parcel.writeInt(ischeck)
     }
 
     override fun describeContents(): Int {
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<Curriculum> {
-        override fun createFromParcel(parcel: Parcel): Curriculum {
-            return Curriculum(parcel)
+    companion object CREATOR : Parcelable.Creator<CurriculumZ> {
+        override fun createFromParcel(parcel: Parcel): CurriculumZ {
+            return CurriculumZ(parcel)
         }
 
-        override fun newArray(size: Int): Array<Curriculum?> {
+        override fun newArray(size: Int): Array<CurriculumZ?> {
             return arrayOfNulls(size)
         }
     }
-
 }
+

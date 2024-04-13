@@ -5,6 +5,7 @@ package com.arcsoft.app.staticdata
  */
 object Constant {
 
+    const val currentItem: String = "currentItem"   //标识:传递课程对象
     const val isCheckTeacher: Int = 1
     const val isCheckStudent: Int = 0
     const val client: String = "client"
@@ -16,7 +17,7 @@ object Constant {
     const val UserName: String = "username"
     const val ToCompareFace: String = "ToCompareFace"
     const val ToActivity: String = "ToActivity"
-    const val ToFaceCollectionFromRegister: String = "ToFaceCollectionFromRegister"
+    const val ToFaceCollectionFromRegister: String = "ToFaceCollectionFromRegister" //注册界面跳转到收集人脸
 
     /**
      * OpenGauss数据库

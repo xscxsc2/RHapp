@@ -14,8 +14,8 @@ class TeacherHomeAdapter(fragmentActivity: FragmentActivity, private val datum: 
 
     override fun createFragment(position: Int): Fragment {
         return when(position){
-            1 -> CurriculumFragment.newInstance(datum[position].id)
-            else -> CurriculumFragment.newInstance(datum[position].id)
+            1 -> CurriculumFragment.newInstance(datum[position].id)//导出
+            else -> CurriculumFragment.newInstance(datum[position].id)//课程
         }
 
     }

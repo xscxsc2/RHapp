@@ -1,28 +1,31 @@
-package com.arcsoft.arcfacedemo.thisapp.teacher.curriculum
+package com.arcsoft.arcfacedemo.thisapp.student.thisstudent
 
-import android.app.Application
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arcsoft.app.staticdata.Constant
 import com.arcsoft.app.util.PreferenceUtil
-import com.arcsoft.arcfacedemo.databinding.FragmentCurriculumBinding
+import com.arcsoft.arcfacedemo.R
+import com.arcsoft.arcfacedemo.databinding.FragmentStudentThisCurriculumBinding
 import com.arcsoft.arcfacedemo.thisapp.base.fragment.BaseViewModelFragment
-import com.arcsoft.arcfacedemo.thisapp.util.CodeUtil
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
-class CurriculumFragment : BaseViewModelFragment<FragmentCurriculumBinding>() {
+class ThisCurriculumFragment: BaseViewModelFragment<FragmentStudentThisCurriculumBinding>() {
 
-    private lateinit var viewModel: CurriculumViewModel
-    private lateinit var adapter: CurriculumAdapter
+    private val client: String = PreferenceUtil.getClient()
+    private val studentName = PreferenceUtil.getUserName()
+    private lateinit var viewModel: ThisCurriculumViewModel
     private var isFirstShow: Boolean = true
+    private lateinit var adapter: StudentCurriculumAdapter
+
 
     override fun initViews() {
         super.initViews()
@@ -32,20 +35,22 @@ class CurriculumFragment : BaseViewModelFragment<FragmentCurriculumBinding>() {
             val decoration = DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)
             addItemDecoration(decoration)
         }
-
     }
 
     override fun initDatum() {
         super.initDatum()
         val viewModelFactory =
-            CurriculumViewModelFactory(
+            ThisCurriculumViewModelFactory(
                 PreferenceUtil.getUserName()
             )
-        viewModel = ViewModelProvider(this, viewModelFactory).get(CurriculumViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ThisCurriculumViewModel::class.java)
         initViewModel(viewModel)
 
+        binding.emptyData.visibility = View.GONE
+        binding.list.visibility = View.VISIBLE
+
         //适配器
-        adapter = CurriculumAdapter(hostActivity, viewModel)
+        adapter = StudentCurriculumAdapter(hostActivity, viewModel)
         binding.list.adapter = adapter
 
         viewModel.ds.observe(this, Observer {
@@ -53,8 +58,9 @@ class CurriculumFragment : BaseViewModelFragment<FragmentCurriculumBinding>() {
             adapter.submitList(it)
         })
 
-    }
 
+
+    }
 
     private fun processRefreshAndLoadMoreStatus(success: Boolean, noMore: Boolean = false) {
         //传入false表示刷新失败
@@ -66,10 +72,25 @@ class CurriculumFragment : BaseViewModelFragment<FragmentCurriculumBinding>() {
         super.initListeners()
         // 下拉加载刷新
         binding.refresh.setOnRefreshListener {
-            // 清除原有数据并重新加载
             viewModel.loadData()
             // 停止刷新动画
 //            binding.refresh.finishRefresh()
+        }
+
+        //加入课堂
+        binding.btnJoinCurriculum.setOnClickListener {
+            val dialog = Dialog(hostActivity)
+            dialog.setContentView(R.layout.dialog_publish)
+            dialog.show()
+            val publish = dialog.findViewById<Button>(R.id.publish_btn)
+            publish.text = "加入"
+            val ed_input = dialog.findViewById<EditText>(R.id.publish_curriculum_name)
+            Log.d("inputCode", "initListeners: ${ed_input}")
+            dialog.findViewById<TextView>(R.id.tv_curriculumCode).text = "课号"
+            Log.d("123", "initListeners: " + ed_input.text.toString())
+            publish.setOnClickListener {
+                viewModel.joinCurriculum(ed_input.text.toString(), studentName)
+            }
         }
     }
 
@@ -81,23 +102,17 @@ class CurriculumFragment : BaseViewModelFragment<FragmentCurriculumBinding>() {
             binding.refresh.autoRefresh()
 //            viewModel.loadData()
         }
-
     }
 
-    companion object {
-        const val TAG = "ContentFragment"
+    companion object{
 
         fun newInstance(
             categoryId: String? = null,
             index: Int = Constant.VALUE_NO
-        ): CurriculumFragment {
+        ): ThisCurriculumFragment{
             val args = Bundle()
-            args.putInt(Constant.STYLE, index)
-            categoryId?.let {
-                args.putString(Constant.ID, it) //把categoryId传进去，上面initdatum可以获得
-            }
 
-            val fragment = CurriculumFragment()
+            val fragment = ThisCurriculumFragment()
             fragment.arguments = args
             return fragment
         }

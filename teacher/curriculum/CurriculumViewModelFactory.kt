@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModelProvider
 /**
  * 内容VM的工厂类
  */
-class CurriculumViewModelFactory(private val categoryId: String?, val index: Int) :
+class CurriculumViewModelFactory(private val teacherName: String) :
     ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CurriculumViewModel::class.java)) {
-            return CurriculumViewModel(categoryId, index) as T
+            return CurriculumViewModel(teacherName) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

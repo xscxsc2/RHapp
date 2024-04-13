@@ -10,9 +10,9 @@ class TabLayoutViewPager2Mediator(
     private val config: ((indicator: TabLayout, pager: ViewPager2) -> Unit)? = null
 ) {
     init {
-        val adapterCount: Int = DataUtil.categories.size
+        val adapterCount: Int = DataUtil.categoriesTeacher.size
         for (i in 0 until adapterCount) {
-            indicator.addTab(indicator.newTab().setText(DataUtil.categories.get(i).title), false)
+            indicator.addTab(indicator.newTab().setText(DataUtil.categoriesTeacher.get(i).title), false)
         }
 
         indicator.selectTab(indicator.getTabAt(0))

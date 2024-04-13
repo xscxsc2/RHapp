@@ -153,6 +153,7 @@ class RegisterActivity : BaseTitleActivity<ActivityRegisterBinding>() {
             startActivity(HomeActivity::class.java)
         }
 
+        //比对
         binding.compare.setOnClickListener {
             val intent =
                 Intent(this, RegisterAndRecognizeActivity::class.java)

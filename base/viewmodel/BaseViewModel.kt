@@ -57,6 +57,6 @@ open class BaseViewModel : ViewModel() {
     }
 
     companion object {
-        const val TAG = "BaseViewModel"
+        const val TAG = "CurriculumViewModel"
     }
 }

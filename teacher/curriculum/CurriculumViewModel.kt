@@ -1,38 +1,36 @@
 package com.arcsoft.arcfacedemo.thisapp.teacher.curriculum
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.arcsoft.app.base.viewmodel.BaseViewModel
 import com.arcsoft.arcfacedemo.thisapp.bean.Curriculum
+import com.arcsoft.arcfacedemo.thisapp.opengauss.OpenGaussHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-/**
- * 内容界面ViewModel
- */
-class CurriculumViewModel(private val categoryId: String?, val index: Int) : BaseViewModel() {
-    var lastId: String? = null
-    var query: String? = null
 
-    private val _data = MutableSharedFlow<List<Curriculum>>()
-    val data: Flow<List<Curriculum>> = _data
+class CurriculumViewModel(private val teacherName: String) : BaseViewModel() {
 
-    fun loadData(){
-        var datas: List<Curriculum> = listOf(
-            Curriculum("高等数学"),
-            Curriculum("程序设计求解"),
-            Curriculum("面向对象编程"),
-            Curriculum("计算机网络"),
-        )
+    private val _ds = MutableLiveData<List<Curriculum>>()
+    val ds: LiveData<List<Curriculum>> = _ds
+
+
+    // 加载数据的函数
+    fun loadData() {
+        // 如果数据已加载过，则不执行加载操作
         viewModelScope.launch {
-            Log.d("名称测试", "loadData: ${datas.get(2).curriculumName}")
-            _data.emit(datas)
+            val newData = OpenGaussHelper.selectAllCurriculumByTeacherName(teacherName)
+            newData?.let {
+                Log.d(TAG, "loadData: ${it.toString()}")
+                _ds.postValue(it)
+            }
         }
-    }
-
-    companion object{
-
     }
 
 
